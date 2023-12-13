@@ -30,7 +30,7 @@ jobs:
       with:
         files: '${{env.work-directory}}/appsettings.json'
       env:
-        ConnectionStrings.MySqlConnection: ${{secrets.FTP_DATABASE_CONNECTION_STRING}}
+        ConnectionStrings.AgendeMeDatabase: ${{secrets.FTP_DATABASE_CONNECTION_STRING}}
 
     - name: Restore dependencies
       run: |
