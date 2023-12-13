@@ -40,7 +40,7 @@ jobs:
     - name: Build Application
       run: |
         cd ${{env.work-directory}}
-        dotnet build --no-restore
+        dotnet build --no-restore AgendeMeWeb.csproj
       
     - name: Publish Application
       run: |
