@@ -40,12 +40,12 @@ jobs:
     - name: Build Application
       run: |
         cd ${{env.work-directory}}
-        dotnet build --no-restore AgendeMeWeb.csproj
+        dotnet build --no-restore ./AgendeMeWeb.csproj
       
     - name: Publish Application
       run: |
         cd ${{env.work-directory}}
-        dotnet publish -c --configuration Release --no-restore --output ./publishWEB
+        dotnet publish -c --configuration Release --no-restore --output ./publishWEB ./AgendeMeWeb.csproj
     
     - name: Upload via FTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
