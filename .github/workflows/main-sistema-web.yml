@@ -14,7 +14,7 @@ jobs:
       name: Produção
     
     env:
-      work-directory: Codigo
+      work-directory: Codigo/AgendeMeWeb
 
     steps:
     - name: Execute checkout in repository
