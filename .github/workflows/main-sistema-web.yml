@@ -45,7 +45,7 @@ jobs:
     - name: Publish Application
       run: |
         cd ${{env.work-directory}}
-        dotnet publish -c --no-restore Release -o ./publishWEB ./AgendeMeWeb.csproj
+        dotnet publish -c Release --no-restore -o ./publishWEB ./AgendeMeWeb.csproj
     
     - name: Upload via FTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
