@@ -14,7 +14,9 @@ jobs:
       name: Produção
     
     env:
-      work-directory: Codigo/AgendeMeWeb
+      work-directory-web: Codigo/AgendeMeWeb
+      work-directory-core: Codigo/Core
+      work-directory-service: Codigo/Service
 
     steps:
     - name: Execute checkout in repository
@@ -25,36 +27,80 @@ jobs:
       with:
         dotnet-version: 6.0.417
       
-    - name: Replace variables
+    - name: Replace variables for AgendeMeWeb
       uses: microsoft/variable-substitution@v1
       with:
-        files: '${{env.work-directory}}/appsettings.json'
+        files: '${{env.work-directory-web}}/appsettings.json'
       env:
         ConnectionStrings.AgendeMeDatabase: ${{secrets.FTP_DATABASE_CONNECTION_STRING}}
 
-    - name: Restore dependencies
+    - name: Restore dependencies for AgendeMeWeb
       run: |
-        cd ${{env.work-directory}}
+        cd ${{env.work-directory-web}}
         dotnet restore
 
-    - name: Build Application
+    - name: Build and Publish AgendeMeWeb
       run: |
-        cd ${{env.work-directory}}
+        cd ${{env.work-directory-web}}
         dotnet build --no-restore ./AgendeMeWeb.csproj
-      
-    - name: Publish Application
-      run: |
-        cd ${{env.work-directory}}
         dotnet publish -c Release --no-restore -o ./publishWEB ./AgendeMeWeb.csproj
     
-    - name: Upload via FTP
+    - name: Upload AgendeMeWeb via FTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASS }}
-        local-dir: '${{env.work-directory}}/publishWEB/'
-        remote-dir: ./
+        local-dir: '${{env.work-directory-web}}/publishWEB/'
+        remote-dir: ./AgendeMeWeb
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/AnaliseProjeto
+
+    - name: Restore dependencies for AgendeMeCore
+      run: |
+        cd ${{env.work-directory-core}}
+        dotnet restore
+
+    - name: Build and Publish AgendeMeCore
+      run: |
+        cd ${{env.work-directory-core}}
+        dotnet build --no-restore ./AgendeMeCore.csproj
+        dotnet publish -c Release --no-restore -o ./publishCORE ./AgendeMeCore.csproj
+    
+    - name: Upload AgendeMeCore via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASS }}
+        local-dir: '${{env.work-directory-core}}/publishCORE/'
+        remote-dir: ./AgendeMeCore
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/AnaliseProjeto
+
+    - name: Restore dependencies for AgendeMeService
+      run: |
+        cd ${{env.work-directory-service}}
+        dotnet restore
+
+    - name: Build and Publish AgendeMeService
+      run: |
+        cd ${{env.work-directory-service}}
+        dotnet build --no-restore ./AgendeMeService.csproj
+        dotnet publish -c Release --no-restore -o ./publishSERVICE ./AgendeMeService.csproj
+    
+    - name: Upload AgendeMeService via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASS }}
+        local-dir: '${{env.work-directory-service}}/publishSERVICE/'
+        remote-dir: ./AgendeMeService
         exclude: |
           **/.git*
           **/.git*/**
