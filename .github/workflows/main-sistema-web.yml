@@ -66,8 +66,8 @@ jobs:
     - name: Build and Publish AgendeMeCore
       run: |
         cd ${{env.work-directory-core}}
-        dotnet build --no-restore ./AgendeMeCore.csproj
-        dotnet publish -c Release --no-restore -o ./publishCORE ./AgendeMeCore.csproj
+        dotnet build --no-restore ./Core.csproj
+        dotnet publish -c Release --no-restore -o ./publishCORE ./Core.csproj
     
     - name: Upload AgendeMeCore via FTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -90,8 +90,8 @@ jobs:
     - name: Build and Publish AgendeMeService
       run: |
         cd ${{env.work-directory-service}}
-        dotnet build --no-restore ./AgendeMeService.csproj
-        dotnet publish -c Release --no-restore -o ./publishSERVICE ./AgendeMeService.csproj
+        dotnet build --no-restore ./Service.csproj
+        dotnet publish -c Release --no-restore -o ./publishSERVICE ./Service.csproj
     
     - name: Upload AgendeMeService via FTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
